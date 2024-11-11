@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<bindings xmlns="http://java.sun.com/xml/ns/jaxb" if-exists="true" version="2.1">
+      
+    <!--
+
+Este archivo ha sido generado por la arquitectura JavaTM para la implantación de la referencia de enlace (JAXB) XML v2.3.0 
+Visite <a href="https://javaee.github.io/jaxb-v2/">https://javaee.github.io/jaxb-v2/</a> 
+Todas las modificaciones realizadas en este archivo se perderán si se vuelve a compilar el esquema de origen. 
+Generado el: 2024.11.11 a las 05:01:02 PM ART 
+
+  -->
+      
+    <bindings xmlns:tns="http://spring.io/guides/gs-producing-web-service" if-exists="true" scd="x-schema::tns">
+            
+        <schemaBindings map="false">
+                  
+            <package name="com.unla.soap_client.service4"/>
+                
+        </schemaBindings>
+            
+        <bindings if-exists="true" scd="tns:UserBulkUploadRequest">
+                  
+            <class ref="com.unla.soap_client.service4.UserBulkUploadRequest"/>
+                
+        </bindings>
+            
+        <bindings if-exists="true" scd="tns:UserBulkUploadResponse">
+                  
+            <class ref="com.unla.soap_client.service4.UserBulkUploadResponse"/>
+                
+        </bindings>
+            
+        <bindings if-exists="true" scd="~tns:UserParseErrorSoap">
+                  
+            <class ref="com.unla.soap_client.service4.UserParseErrorSoap"/>
+                
+        </bindings>
+            
+        <bindings if-exists="true" scd="~tns:UserBulkDTO">
+                  
+            <class ref="com.unla.soap_client.service4.UserBulkDTO"/>
+                
+        </bindings>
+          
+    </bindings>
+    
+</bindings>

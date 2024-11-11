@@ -1,0 +1,50 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="http://spring.io/guides/gs-producing-web-service"
+           targetNamespace="http://spring.io/guides/gs-producing-web-service" elementFormDefault="qualified">
+
+
+    <xs:element name="ProductBulkUploadRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="csvData" type="xs:base64Binary"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="ProductBulkUploadResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="createdProducts" type="tns:ProductBulkDTO" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="errors" type="tns:ProductParseErrorSoap" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="ProductParseErrorSoap">
+        <xs:sequence>
+            <xs:element name="lineNumber" type="xs:int"/>
+            <xs:element name="codigo" type="xs:string" minOccurs="0"/>
+            <xs:element name="color" type="xs:string" minOccurs="0"/>
+            <xs:element name="talle" type="xs:string" minOccurs="0"/>
+            <xs:element name="errorMessage" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="tiendasAsignadasType">
+        <xs:sequence>
+            <xs:element name="tienda" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ProductBulkDTO">
+        <xs:sequence>
+            <xs:element name="codigo" type="xs:string"/>
+            <xs:element name="nombre" type="xs:string"/>  <!-- Agregado -->
+            <xs:element name="color" type="xs:string"/>
+            <xs:element name="talle" type="xs:string"/>
+            <xs:element name="foto" type="xs:string"/>
+            <xs:element name="tiendasAsignadas" type="tns:tiendasAsignadasType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>

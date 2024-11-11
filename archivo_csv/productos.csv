@@ -1,0 +1,23 @@
+codigo;nombre;color;talle;foto;tiendas_asignadas
+P097;Pijama Azul;Blanco;Único;http://dummyimage.com/102x100.png/cc0000/ffffff;T036|T037
+P098;Ropa Interior Negra;Beige;Único;http://dummyimage.com/237x100.png/5fa2dd/ffffff;T038|T039
+P099;Pijama Azul;Rojo;S;http://dummyimage.com/102x100.png/cc0000/ffffff;T036|T037
+P100;Ropa Interior Negra;Gris;M;http://dummyimage.com/237x100.png/5fa2dd/ffffff;T038|T039
+P101;Camisa Azul;Naranja;3XL;http://dummyimage.com/111x100.png/5fa2dd/ffffff;T001
+P102;Pantalón Negro;Marrón;XS;http://dummyimage.com/244x100.png/5fa2dd/ffffff;T002|T003
+P103;Zapatos Rojos;Coral;S;http://dummyimage.com/229x100.png/5fa2dd/ffffff;T004|T005
+P104;Bufanda Gris;Índigo;XL;http://dummyimage.com/190x100.png/dddddd/000000;T006|T007
+P105;Vestido Blanco;Rojo;M;http://dummyimage.com/216x100.png/5fa2dd/ffffff;T008|T009
+P106;Gorra Azul;Celeste;M;http://dummyimage.com/170x100.png/ff4444/ffffff;T010|T011
+P107;Calcetines Verdes;Morado;XL;http://dummyimage.com/161x100.png/5fa2dd/ffffff;T012|T013
+P108;Chaqueta Marrón;Gris;2XL;http://dummyimage.com/226x100.png/cc0000/ffffff;T014|T015
+P109;Falda Rosa;Rojo;2XL;http://dummyimage.com/115x100.png/5fa2dd/ffffff;T016|T017
+P110;Sombrero Negro;Lavanda;2XL;http://dummyimage.com/131x100.png/ff4444/ffffff;T018|T019
+P111;Blusa Amarilla;Café;3XL;http://dummyimage.com/129x100.png/dddddd/000000;T020|T021
+P112;Pantalones Cortos Azules;Marrón;XS;http://dummyimage.com/120x100.png/dddddd/000000;T022|T023
+P113;Botas Marrones;Coral;M;http://dummyimage.com/136x100.png/dddddd/000000;T024|T025
+P114;Chaleco Gris;Rosa;3XL;http://dummyimage.com/198x100.png/5fa2dd/ffffff;T026|T027
+P115;Camiseta Morada;Lavanda;XS;http://dummyimage.com/247x100.png/cc0000/ffffff;T028|T029
+P116;Sudadera Naranja;Morado;XL;http://dummyimage.com/197x100.png/ff4444/ffffff;T030|T031
+P117;Traje de Baño Verde;Amarillo;L;http://dummyimage.com/155x100.png/5fa2dd/ffffff;T099|T100
+P118;Abrigo Beige;Gris;XL;http://dummyimage.com/119x100.png/ff4444/ffffff;
