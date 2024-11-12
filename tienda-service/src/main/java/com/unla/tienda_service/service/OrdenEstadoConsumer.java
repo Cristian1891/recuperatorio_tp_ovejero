@@ -1,7 +1,5 @@
 package com.unla.tienda_service.service;
 
-import com.unla.tienda_service.KafkaTopicProvider;
-import com.unla.tienda_service.dtos.TiendaResponse;
 import com.unla.tienda_service.messages.DispatchOrdenMessage;
 import com.unla.tienda_service.messages.ResponseMessage;
 import com.unla.tienda_service.model.OrdenCompra;
@@ -11,17 +9,13 @@ import com.unla.tienda_service.repository.OrdenCompraRepository;
 import com.unla.tienda_service.repository.OrdenDespachoRepository;
 import com.unla.tienda_service.repository.TiendaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.annotation.KafkaHandler;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.config.KafkaListenerContainerFactory;
-import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,23 +30,25 @@ public class OrdenEstadoConsumer {
     @Autowired
     private TiendaRepository tiendaRepository;
 
-    @Autowired
-    private KafkaTopicProvider kafkaTopicProvider;
+//    @Autowired
+//    private KafkaTopicProvider kafkaTopicProvider;
 
 
-    @Autowired
-    private KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, Object>> kafkaListenerContainerFactory;
-
-    @KafkaHandler
-    public void processResponse(ResponseMessage responseMessage) {
+    @KafkaListener(topics = "#{__listener.getDynamicTopics()}", groupId = "tienda-group", containerFactory = "kafkaListenerContainerFactory")
+    @Transactional
+    public void processResponse(ResponseMessage responseMessage, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         try {
-            Optional<Tienda> tiendaOptional = tiendaRepository.findByCodigo(responseMessage.getCodigoTienda());
-            if (tiendaOptional.isEmpty()) {
-                System.out.println("Tienda no encontrada para el código: " + responseMessage.getCodigoTienda());
+            System.out.println(responseMessage.getEstado()+"ESTADO ORDEN RECIBIDA");
+            System.out.println(responseMessage.getFechaRecepcion()+"FECHA RECEPCION ORDEN RECIBIDA");
+
+            String codigoTienda = extractCodigoTiendaFromTopic(topic);
+
+            Tienda tienda = tiendaRepository.findByCodigo(codigoTienda).orElse(null);
+            if (tienda == null) {
+                System.out.println("Tienda no encontrada para el código: " + codigoTienda);
                 return;
             }
 
-            Tienda tienda = tiendaOptional.get();
             System.out.println("Procesando respuesta de la tienda: " + tienda.getCodigo());
 
             OrdenCompra orden = ordenCompraRepository.findById(responseMessage.getId()).orElse(null);
@@ -64,6 +60,8 @@ public class OrdenEstadoConsumer {
             orden.setEstado(convertirEstado(responseMessage.getEstado()));
             orden.setFechaRecepcion(responseMessage.getFechaRecepcion());
             orden.setObservaciones(responseMessage.getObservaciones());
+            System.out.println(orden.toString());
+
             ordenCompraRepository.save(orden);
 
             System.out.println("Orden actualizada exitosamente para la tienda: " + tienda.getCodigo());
@@ -73,15 +71,19 @@ public class OrdenEstadoConsumer {
         }
     }
 
-    @KafkaHandler
-    public void processResponseDispatch(DispatchOrdenMessage dispatchOrdenMessage) {
+    @KafkaListener(topics = "#{__listener.getDynamicDispatchTopics()}", groupId = "tienda-group", containerFactory = "kafkaListenerContainerFactory")
+    @Transactional
+    public void processResponseDispatch(DispatchOrdenMessage dispatchOrdenMessage, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         try {
-            Optional<Tienda> tiendaOptional = tiendaRepository.findByCodigoAndEstado(dispatchOrdenMessage.getCodigoTienda(), true);
-            if (tiendaOptional.isEmpty()) {
-                System.out.println("Tienda no encontrada para el código: " + dispatchOrdenMessage.getCodigoTienda());
+            System.out.println("AAAAAAAAAAAAAAAAAA222");
+
+            String codigoTienda = extractCodigoTiendaFromTopic(topic);
+
+            Tienda tienda = tiendaRepository.findByCodigo(codigoTienda).orElse(null);
+            if (tienda == null) {
+                System.out.println("Tienda no encontrada para el código: " + codigoTienda);
                 return;
             }
-            Tienda tienda = tiendaOptional.get();
             System.out.println("Procesando respuesta de la tienda: " + tienda.getCodigo());
 
             OrdenCompra orden = ordenCompraRepository.findById(dispatchOrdenMessage.getOrdenId()).orElse(null);
@@ -90,12 +92,19 @@ public class OrdenEstadoConsumer {
                 return;
             }
 
-            OrdenDespacho ordenDespacho = new OrdenDespacho();
+
+
+            OrdenDespacho ordenDespacho=new OrdenDespacho();
             ordenDespacho.setFechaEstimadaEnvio(dispatchOrdenMessage.getFechaEstimadaEnvio());
             ordenDespacho.setIdOrdenCompra(orden.getId());
+            System.out.println(orden.toString());
             ordenDespachoRepository.save(ordenDespacho);
 
-            orden.setIdOrdenDespacho(ordenDespacho.getId());
+            Long idOrdenDespachoGenerado = ordenDespacho.getId();
+
+
+            orden.setIdOrdenDespacho(idOrdenDespachoGenerado);
+            System.out.println(orden.toString());
             ordenCompraRepository.save(orden);
 
             System.out.println("Orden actualizada exitosamente para la tienda: " + tienda.getCodigo());
@@ -109,16 +118,23 @@ public class OrdenEstadoConsumer {
         return OrdenCompra.EstadoOrden.valueOf(estado.name());
     }
 
-//    private Tienda getTiendaFromMessage(Object message) {
-//        String codigoTienda;
-//        if (message instanceof ResponseMessage) {
-//            codigoTienda = ((ResponseMessage) message).getCodigoTienda();
-//        } else if (message instanceof DispatchOrdenMessage) {
-//            codigoTienda = ((DispatchOrdenMessage) message).getCodigoTienda();
-//        } else {
-//            return null;
-//        }
-//
-//        return tiendaRepository.findByCodigo(codigoTienda).orElse(null);
-//    }
+    private String extractCodigoTiendaFromTopic(String topic) {
+        return topic.split("-")[0];
+    }
+
+
+    public List<String> getDynamicTopics() {
+        List<Tienda> tiendas = tiendaRepository.findAll();
+        return tiendas.stream()
+                .map(tienda -> tienda.getCodigo() + "-solicitudes")
+                .collect(Collectors.toList());
+    }
+
+    public List<String> getDynamicDispatchTopics() {
+        List<Tienda> tiendas = tiendaRepository.findAll();
+        return tiendas.stream()
+                .map(tienda -> tienda.getCodigo() + "-despacho")
+                .collect(Collectors.toList());
+    }
+
 }

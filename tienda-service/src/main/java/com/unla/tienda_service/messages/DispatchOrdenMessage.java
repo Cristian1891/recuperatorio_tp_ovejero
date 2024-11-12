@@ -13,5 +13,4 @@ import java.time.LocalDateTime;
 public class DispatchOrdenMessage {
     private Long ordenId;
     private LocalDate fechaEstimadaEnvio;
-    private String codigoTienda;
 }

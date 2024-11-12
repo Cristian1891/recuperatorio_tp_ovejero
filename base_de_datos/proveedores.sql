@@ -100,7 +100,7 @@ INSERT INTO items_orden (id, cantidad_solicitada, codigo_articulo, color, talle,
 
 
 
-SET FOREIGN_KEY_CHECKS = 1;
+SET FOREIGN_KEY_CHECKS = 0;
 TRUNCATE TABLE `items_orden`;
 TRUNCATE TABLE `ordenes_compra`;
 TRUNCATE TABLE `proveedor`;

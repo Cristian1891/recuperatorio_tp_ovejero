@@ -56,7 +56,7 @@ class GrpcClient(object):
     def GetAllUsers(self):
         request = usergrpc_pb2.Empty()
         return self.stub.GetAllUsers(request)
-    
+     
     def GetUser(self, username):
         request = usergrpc_pb2.GetUserRequest(username=username)
         return self.stub.GetUser(request)
